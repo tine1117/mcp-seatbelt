@@ -56,6 +56,10 @@ export function detectPathTraversal(candidate: NormalizedCandidate, root: string
     return undefined;
   }
 
+  if (/^[a-zA-Z]:\.\.([\\/]|$)/.test(candidate.pathText)) {
+    return `path traversal segment matched: ${candidate.original}`;
+  }
+
   const rootResolved = resolve(root);
   const candidatePath = isAbsolute(candidate.pathText) ? resolve(candidate.pathText) : resolve(rootResolved, candidate.pathText);
   const trustedRoots = [rootResolved, ...allowlistPaths.map((path) => resolve(path))];
