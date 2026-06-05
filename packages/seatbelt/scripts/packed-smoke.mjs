@@ -27,7 +27,7 @@ try {
 
   const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
   const packResult = run(npmCommand, ["pack", "--json", "--pack-destination", packDir], { cwd: packageDir });
-  const packEntries = JSON.parse(packResult.stdout);
+  const packEntries = parseJsonOutput(packResult, "npm pack --json");
   const tarballName = packEntries[0]?.filename;
   if (!tarballName) {
     throw new Error("npm pack did not report a tarball filename");
@@ -43,7 +43,7 @@ try {
 
   run(binPath, ["--help"], { cwd: appDir });
   const schemaResult = run(binPath, ["config", "schema"], { cwd: appDir });
-  JSON.parse(schemaResult.stdout);
+  parseJsonOutput(schemaResult, "mcp-seatbelt config schema");
 
   const doctorResult = run(binPath, ["doctor", "--json"], {
     cwd: appDir,
@@ -55,7 +55,7 @@ try {
       XDG_CONFIG_HOME: xdgConfigDir
     }
   });
-  const report = JSON.parse(doctorResult.stdout);
+  const report = parseJsonOutput(doctorResult, "mcp-seatbelt doctor --json");
   if (report.schemaVersion !== 1) {
     throw new Error("doctor --json did not return schemaVersion 1");
   }
@@ -81,4 +81,24 @@ function run(command, args, options = {}) {
     ].filter(Boolean).join("\n"));
   }
   return result;
+}
+
+function parseJsonOutput(result, label) {
+  const stdout = result.stdout.trim();
+  if (!stdout) {
+    throw new Error([
+      `${label} produced empty stdout`,
+      result.stderr ? `stderr:\n${result.stderr}` : undefined
+    ].filter(Boolean).join("\n"));
+  }
+
+  try {
+    return JSON.parse(stdout);
+  } catch (error) {
+    throw new Error([
+      `${label} produced invalid JSON: ${error instanceof Error ? error.message : String(error)}`,
+      `stdout:\n${result.stdout}`,
+      result.stderr ? `stderr:\n${result.stderr}` : undefined
+    ].filter(Boolean).join("\n"));
+  }
 }

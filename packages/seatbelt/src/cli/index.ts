@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { Command, CommanderError } from "commander";
@@ -238,9 +238,17 @@ function resolveDashboardStaticDir(cwd: string, env: NodeJS.ProcessEnv): string 
   return candidates.find((candidate) => existsSync(candidate));
 }
 
-const entryPath = process.argv[1] ? resolve(process.argv[1]) : "";
-if (entryPath && resolve(fileURLToPath(import.meta.url)) === entryPath) {
+const entryPath = process.argv[1] ? resolveCliEntryPath(process.argv[1]) : "";
+if (entryPath && resolveCliEntryPath(fileURLToPath(import.meta.url)) === entryPath) {
   runCli().then((code) => {
     process.exitCode = code;
   });
+}
+
+function resolveCliEntryPath(path: string): string {
+  try {
+    return realpathSync(path);
+  } catch {
+    return resolve(path);
+  }
 }
