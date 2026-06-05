@@ -1,0 +1,60 @@
+{
+  "name": "mcp-seatbelt",
+  "version": "0.1.0",
+  "description": "Runtime guard and blackbox recorder for MCP tool calls.",
+  "license": "MIT",
+  "author": "mcp-seatbelt contributors",
+  "homepage": "https://github.com/tine1117/mcp-seatbelt#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tine1117/mcp-seatbelt.git",
+    "directory": "packages/seatbelt"
+  },
+  "bugs": {
+    "url": "https://github.com/tine1117/mcp-seatbelt/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai-safety",
+    "security",
+    "cli",
+    "developer-tools",
+    "audit-log",
+    "redaction",
+    "local-first"
+  ],
+  "type": "module",
+  "bin": {
+    "mcp-seatbelt": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/cli/index.ts --format esm --dts --sourcemap --clean && node scripts/copy-dashboard.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

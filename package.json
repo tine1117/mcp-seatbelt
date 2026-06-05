@@ -1,0 +1,23 @@
+{
+  "name": "mcp-seatbelt-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "build": "corepack pnpm --filter @mcp-seatbelt/dashboard build && corepack pnpm --filter mcp-seatbelt build",
+    "test": "corepack pnpm --filter mcp-seatbelt test",
+    "test:all": "corepack pnpm -r test",
+    "typecheck": "corepack pnpm -r typecheck",
+    "smoke:pack": "node packages/seatbelt/scripts/packed-smoke.mjs",
+    "smoke:dashboard": "node scripts/dashboard-smoke.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "playwright": "^1.49.1",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

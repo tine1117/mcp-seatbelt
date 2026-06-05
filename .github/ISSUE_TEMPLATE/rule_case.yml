@@ -1,0 +1,42 @@
+name: Rule case
+description: Report a false positive, false negative, or missing security-rule fixture.
+title: "[Rule]: "
+labels:
+  - rules
+body:
+  - type: dropdown
+    id: rule
+    attributes:
+      label: Rule
+      options:
+        - sensitive-path
+        - destructive-shell
+        - metadata-endpoint
+        - tool-rug-pull
+        - path-traversal
+        - other
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Case type
+      options:
+        - False positive
+        - False negative
+        - Missing coverage
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Redacted input
+      description: Share the smallest safe input that reproduces the decision.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected decision
+    validations:
+      required: true

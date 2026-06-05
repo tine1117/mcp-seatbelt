@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "mcp-seatbelt",
+      "args": ["wrap", "--", "npx", "@modelcontextprotocol/server-filesystem", "~/projects"]
+    }
+  }
+}

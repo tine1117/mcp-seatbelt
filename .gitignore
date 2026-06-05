@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.mcp-seatbelt/
+.mcp-seatbelt-dashboard/
+.playwright-mcp/
+.dashboard.*.log
+goal.md
+*.tsbuildinfo
+playwright-report/
+test-results/
+*.tgz
+.env
+.env.*
+!.env.example
