@@ -6,7 +6,7 @@ describe("package metadata", () => {
   it("points the published binary at the built CLI entrypoint", () => {
     const packageJson = JSON.parse(readFileSync(resolve("package.json"), "utf8"));
 
-    expect(packageJson.bin["mcp-seatbelt"]).toBe("./dist/index.js");
+    expect(packageJson.bin["mcp-seatbelt"]).toBe("dist/index.js");
   });
 
   it("packages the user-facing docs, schema, and examples needed after install", () => {

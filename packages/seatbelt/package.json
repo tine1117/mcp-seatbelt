@@ -26,7 +26,7 @@
   ],
   "type": "module",
   "bin": {
-    "mcp-seatbelt": "./dist/index.js"
+    "mcp-seatbelt": "dist/index.js"
   },
   "engines": {
     "node": ">=20"
