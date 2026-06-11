@@ -51,7 +51,18 @@ export class StdioSeatbeltProxy {
     });
     this.child = child;
     this.exitPromise = new Promise((resolve) => {
-      child.once("exit", (code) => resolve(code ?? 0));
+      let settled = false;
+      const resolveOnce = (code: number): void => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        resolve(code);
+      };
+
+      child.once("exit", (code) => resolveOnce(code ?? 0));
+      // spawn 실패는 exit 이벤트 없이 error/close만 올 수 있어 CLI 대기가 풀리도록 한다.
+      child.once("error", () => resolveOnce(1));
     });
 
     const stdin = this.options.stdin ?? process.stdin;

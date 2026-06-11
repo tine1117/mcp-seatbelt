@@ -382,6 +382,19 @@ describe("CLI", () => {
     expect(invalidIo.stderrText()).toContain("Invalid seatbelt config");
   });
 
+  it("wrap exits when the child server command cannot be spawned", async () => {
+    const root = await mkdtemp(join(tmpdir(), "seatbelt-wrap-spawn-error-"));
+    const io = createIo({}, "", root);
+    const code = await withTimeout(
+      runCli(["node", "mcp-seatbelt", "wrap", "--root-dir", root, "--", "__mcp_seatbelt_missing_command__"], io),
+      2000,
+      "wrap spawn failure did not exit"
+    );
+
+    expect(code).toBe(1);
+    expect(io.stderrText()).toContain("mcp-seatbelt: child process error");
+  });
+
   it("replays the latest JSONL run", async () => {
     const root = await mkdtemp(join(tmpdir(), "seatbelt-replay-"));
     const store = await JsonlEventStore.create({ rootDir: root, runId: "replay-run" });
@@ -430,6 +443,22 @@ function createIo(extraEnv: NodeJS.ProcessEnv = {}, stdinText = "", cwd = proces
     stdoutText: () => stdout,
     stderrText: () => stderr
   };
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(message)), timeoutMs);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error: unknown) => {
+        clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
 }
 
 async function writeClaudeConfig(root: string, contents: unknown): Promise<void> {
